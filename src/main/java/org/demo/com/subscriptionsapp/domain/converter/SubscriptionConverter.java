@@ -1,7 +1,7 @@
 package org.demo.com.subscriptionsapp.domain.converter;
 
 import org.demo.com.subscriptionsapp.domain.entity.SubscriptionEntity;
-import org.demo.com.subscriptionsapp.api.dto.Subscription;
+import org.demo.com.subscriptionsapp.api.dto.subscription.Subscription;
 
 public final class SubscriptionConverter {
 

@@ -1,7 +1,7 @@
 package org.demo.com.subscriptionsapp.domain.converter;
 
 import org.demo.com.subscriptionsapp.domain.entity.OrderEntity;
-import org.demo.com.subscriptionsapp.api.dto.Order;
+import org.demo.com.subscriptionsapp.api.dto.order.Order;
 
 public final class OrderConverter {
 

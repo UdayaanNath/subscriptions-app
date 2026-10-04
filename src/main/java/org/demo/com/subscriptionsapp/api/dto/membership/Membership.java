@@ -1,35 +1,36 @@
-package org.demo.com.subscriptionsapp.api.dto;
+package org.demo.com.subscriptionsapp.api.dto.membership;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.demo.com.subscriptionsapp.domain.enums.MembershipStatus;
 
 import java.util.Date;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Membership {
 
     private Long id;
 
+    @NotNull(message = "User ID is required")
+    @Positive
     private Long userId;
 
-    @Setter
+    @NotNull(message = "Subscription ID is required")
+    @Positive
     private Long subscriptionId;
 
     private Date createdAt;
 
-    @Setter
+    @NotNull(message = "Expiration date is required")
     private Date expireAt;
 
-    @Setter
     private Date updatedAt;
 
-    @Setter
+    @NotNull(message = "Membership status is required")
     private MembershipStatus membershipStatus;
 }

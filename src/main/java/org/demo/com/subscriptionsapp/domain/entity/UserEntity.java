@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.demo.com.subscriptionsapp.domain.enums.UserAccountStatus;
+import org.demo.com.subscriptionsapp.domain.enums.UserCohort;
 
 @Entity
 @Table(name = "users")
@@ -31,4 +32,9 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "user_account_status", nullable = false)
     private UserAccountStatus userAccountStatus;
+
+    @NotNull(message = "User cohort is required")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cohort", nullable = false)
+    private UserCohort cohort;
 }
