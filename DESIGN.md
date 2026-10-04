@@ -291,3 +291,23 @@ List calls return a Spring page (`content`, `totalElements`, `totalPages`, `numb
 | All three tier checks must pass | ANY-of criteria | A tier can still be opened to every cohort by listing all of them, while order gates stay mandatory. |
 | Benefits are data, not applied to a cart | Price the cart inside this service | There is no item catalogue. The benefit list is what a storefront would read. |
 | `@Version` only | Pessimistic row locks | Concurrent updates fail instead of overwriting each other. The conflict is not mapped to a dedicated HTTP status yet. |
+
+---
+
+## 10. Tests
+
+`./mvnw test` runs the suite. Service, controller, converter, and rule tests mock their collaborators. `SubscriptionsAppApplicationTests` starts the application, so Postgres must be up.
+
+| Class | What it covers |
+|---|---|
+| `UserServiceTest` | List ignores a blank username and uses no predicate when every filter is absent. Get returns the user or 404. Create rejects a duplicate username and a signup when no Free plan is active; a new user is `ACTIVE`, cohort `STANDARD`, with a free membership of `default-free-tier-days`. Update 404s an unknown id, rejects a second deactivation, and leaves memberships alone when the status stays `ACTIVE`. Deactivation cancels only memberships that are not `EXPIRED` and whose `expireAt` is still ahead. |
+| `OrderServiceTest` | List filters by user and status, or matches everything when both are absent. Get 404s an unknown id. Create 404s a missing user and stores a zero amount as `PENDING_PAYMENT`. Update 404s an unknown order or owner, returns 400 for a deactivated owner, changes status when it is sent, and leaves status alone when it is omitted. |
+| `SubscriptionServiceTest` | List applies name, tier, plan, status, and min/max price, and skips a blank name plus omitted prices. Create stores the plan as `ACTIVE`, including price 0. Get and update 404 an unknown id. Update changes only `price` and `subscriptionStatus` when those fields are present. |
+| `MembershipServiceTest` | List filters by user, subscription, and status. Get 404s an unknown id. Create 404s a missing user or subscription, 400s a deactivated user or a `STOPPED` plan, cancels every existing membership, and sets expiry from the plan (yearly = 365 days). Renew 400s a cancelled membership and a stopped plan, 404s a missing membership or subscription, and extends an `EXPIRED` membership from today (monthly = 30 days). Upgrade 400s an inactive membership, a deactivated user, a stopped plan, the Premium tier, and a member who fails the next tier's rules; 404s a missing membership, user, subscription, or target plan. A passing member moves one tier up, and the month window starts at midnight on the 1st. Downgrade 400s Free, a member who still meets the current tier, and a tier missing from `tier-order`; otherwise it moves one tier down. Cancel 404s a missing id, 400s an already cancelled membership, and cancels an expired one. |
+| `BenefitServiceTest` | List 404s an unknown user and returns an empty page when there is no active unexpired membership. Several active memberships on the same plan produce one subscription id. Get, create, and update 404 unknown ids. Create allows a null discount. Update changes only fields that are present, including a discount of 0. Delete 404s an unknown id and deletes a known one. |
+| `UpgradeRuleTest` | Order count must be greater than the minimum (5 fails, 6 passes; a minimum of -1 allows zero orders). Monthly value includes the exact minimum and rejects one below it. Cohort must be in the allowed list; an empty list matches nobody. `AndRule` passes only when every rule passes. The factory combines a tier's three rules and throws when that tier has no config. |
+| `DateUtilsTest` | `addDays` moves forward, backward, and across 29 February 2024. Monthly, quarterly, and yearly expiry are 30, 90, and 365 days. |
+| `BaseSearchCriteriaTest` | A negative page becomes 0. Size below 1 becomes 20; a positive size is kept. Default list statuses are user `ACTIVE`, order `DELIVERED`, membership `ACTIVE`, subscription `ACTIVE`. Omitted prices stay null. |
+| `ConverterTest` | A null entity or model converts to null. User, order, subscription, and membership round-trip their fields, including a zero amount and a stopped plan. Benefit keeps a null description and a discount. |
+| `ApiErrorTest` | `NotFoundException.of` is 404 with `Entity not found: id`. `BadRequestException` is 400 with the supplied reason. |
+| `ControllerTest` | Each controller method delegates to its service. Create returns 201. Benefit delete returns 204. The other calls return 200. |
