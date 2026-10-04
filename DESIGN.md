@@ -274,7 +274,7 @@ List calls return a Spring page (`content`, `totalElements`, `totalPages`, `numb
 
 ## 8. Operational notes
 
-- **Schema:** Flyway `V1`–`V10` create tables. `V11`–`V14` seed five users, twelve subscriptions, thirteen orders, and six memberships.
+- **Schema:** Flyway `V1`–`V10` create tables. `V11`–`V15` seed five users, twelve subscriptions, thirteen orders, thirty benefits and six memberships.
 - **Containers:** `docker compose up --build`. App on port 8080, Postgres on 5432. No volume: data disappears with the container.
 - **Limits:** each container 0.5 CPU and 512 MB. Tomcat threads 5–20. Hikari pool size 5. JVM `-Xms256m -Xmx256m -Xss512k`.
 - **Exercise the API:** `./demo.sh` against a fresh stack.

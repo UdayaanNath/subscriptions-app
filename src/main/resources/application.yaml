@@ -8,6 +8,10 @@ spring:
   application:
     name: subscriptions-app
 
+  web:
+    error:
+      include-message: always
+
   datasource:
     url: jdbc:postgresql://localhost:5432/subscription_db
     username: admin
