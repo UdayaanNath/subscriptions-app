@@ -1,13 +1,14 @@
 package org.demo.com.subscriptionsapp.domain.converter;
 
-import org.demo.com.subscriptionsapp.domain.model.Membership;
+import org.demo.com.subscriptionsapp.domain.entity.MembershipEntity;
+import org.demo.com.subscriptionsapp.api.dto.Membership;
 
 public final class MembershipConverter {
 
     private MembershipConverter() {
     }
 
-    public static Membership toModel(org.demo.com.subscriptionsapp.domain.entity.Membership entity) {
+    public static Membership toModel(MembershipEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -22,11 +23,11 @@ public final class MembershipConverter {
                 .build();
     }
 
-    public static org.demo.com.subscriptionsapp.domain.entity.Membership toEntity(Membership model) {
+    public static MembershipEntity toEntity(Membership model) {
         if (model == null) {
             return null;
         }
-        return org.demo.com.subscriptionsapp.domain.entity.Membership.builder()
+        return MembershipEntity.builder()
                 .id(model.getId())
                 .userId(model.getUserId())
                 .subscriptionId(model.getSubscriptionId())

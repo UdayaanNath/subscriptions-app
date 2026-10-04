@@ -23,7 +23,7 @@ import org.demo.com.subscriptionsapp.domain.enums.SubscriptionTier;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Subscription extends BaseEntity {
+public class SubscriptionEntity extends BaseEntity {
 
     @NotBlank(message = "Subscription name cannot be blank")
     @Column(name = "subscription_name", nullable = false, length = 100)

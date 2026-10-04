@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -16,12 +17,14 @@ import lombok.experimental.SuperBuilder;
 import org.demo.com.subscriptionsapp.domain.enums.OrderStatus;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+        @Index(name = "idx_orders_user_id", columnList = "user_id")
+})
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order extends BaseEntity {
+public class OrderEntity extends BaseEntity {
 
     @NotNull(message = "User ID is required")
     @Positive

@@ -20,7 +20,7 @@ import org.demo.com.subscriptionsapp.domain.enums.UserAccountStatus;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
 
     @NotBlank(message = "Username cannot be blank")
     @Column(name = "username", nullable = false, unique = true, updatable = false, length = 50)

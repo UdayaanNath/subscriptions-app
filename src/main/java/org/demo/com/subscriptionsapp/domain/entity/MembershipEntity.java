@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -17,12 +18,15 @@ import org.demo.com.subscriptionsapp.domain.enums.MembershipStatus;
 import java.util.Date;
 
 @Entity
-@Table(name = "memberships")
+@Table(name = "memberships", indexes = {
+        @Index(name = "idx_memberships_user_id", columnList = "user_id"),
+        @Index(name = "idx_memberships_subscription_id", columnList = "subscription_id")
+})
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Membership extends BaseEntity {
+public class MembershipEntity extends BaseEntity {
 
     @NotNull(message = "User ID is required")
     @Positive

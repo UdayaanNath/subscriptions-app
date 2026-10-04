@@ -1,13 +1,14 @@
 package org.demo.com.subscriptionsapp.domain.converter;
 
-import org.demo.com.subscriptionsapp.domain.model.Order;
+import org.demo.com.subscriptionsapp.domain.entity.OrderEntity;
+import org.demo.com.subscriptionsapp.api.dto.Order;
 
 public final class OrderConverter {
 
     private OrderConverter() {
     }
 
-    public static Order toModel(org.demo.com.subscriptionsapp.domain.entity.Order entity) {
+    public static Order toModel(OrderEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -21,11 +22,11 @@ public final class OrderConverter {
                 .build();
     }
 
-    public static org.demo.com.subscriptionsapp.domain.entity.Order toEntity(Order model) {
+    public static OrderEntity toEntity(Order model) {
         if (model == null) {
             return null;
         }
-        return org.demo.com.subscriptionsapp.domain.entity.Order.builder()
+        return OrderEntity.builder()
                 .id(model.getId())
                 .userId(model.getUserId())
                 .amount(model.getAmount())
