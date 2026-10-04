@@ -21,19 +21,13 @@ Database files are not kept: `docker compose down` drops them, and the next `up`
 | http://localhost:8080/api/v1 | HTTP API |
 | `localhost:5432` | Postgres `subscription_db`, user `admin`, password `admin123` |
 
-Follow logs for the generated security password:
-
-```bash
-docker compose logs -f app
-```
-
 Stop:
 
 ```bash
 docker compose down
 ```
 
-Requests use HTTP Basic (`user` / that generated password). CSRF is disabled, so `POST`, `PATCH`, and `DELETE` use the same credential.
+The API does not require authentication.
 
 ## Tests
 
@@ -48,34 +42,33 @@ Seeded users: **1 Alice** (`STANDARD`), **2 Bob** (`EARLY_ADOPTER`), **3 Carol**
 
 ```bash
 chmod +x demo.sh
-./demo.sh THE_GENERATED_PASSWORD
+./demo.sh
 ```
 
-The same flows by hand (`PASS` is the password from the log):
+The same flows by hand:
 
 ```bash
 BASE=http://localhost:8080/api/v1
-AUTH=user:THE_GENERATED_PASSWORD
 
 # 1. Plans on offer (one row per tier × plan)
-curl -s -u $AUTH "$BASE/subscriptions?size=20" | jq
+curl -s "$BASE/subscriptions?size=20" | jq
 
 # 2. Alice is on Free Yearly and is not eligible for Silver
-curl -s -u $AUTH -X PATCH $BASE/memberships/1/upgrade | jq
+curl -s -X PATCH $BASE/memberships/1/upgrade | jq
 
 # 3. Bob no longer meets Silver rules, so he moves down one tier
-curl -s -u $AUTH -X PATCH $BASE/memberships/2/downGrade | jq
+curl -s -X PATCH $BASE/memberships/2/downGrade | jq
 
 # 4. Create an order for Bob, then refuse an order update for deactivated Dave
-curl -s -u $AUTH -X POST $BASE/orders -H 'Content-Type: application/json' \
+curl -s -X POST $BASE/orders -H 'Content-Type: application/json' \
      -d '{"userId":2,"amount":640}' | jq
-curl -s -u $AUTH -X PATCH $BASE/orders/9 -H 'Content-Type: application/json' \
+curl -s -X PATCH $BASE/orders/9 -H 'Content-Type: application/json' \
      -d '{"orderStatus":"DELIVERED"}' | jq
 
 # 5. Attach free delivery to Alice's plan and read the benefits she can use
-curl -s -u $AUTH -X POST $BASE/benefits -H 'Content-Type: application/json' \
+curl -s -X POST $BASE/benefits -H 'Content-Type: application/json' \
      -d '{"subscriptionId":3,"benefitType":"FREE_DELIVERY","name":"Free delivery"}' | jq
-curl -s -u $AUTH "$BASE/benefits?userId=1" | jq
+curl -s "$BASE/benefits?userId=1" | jq
 ```
 
 ## Configuration (`application.yaml`)

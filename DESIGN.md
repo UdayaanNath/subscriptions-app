@@ -3,7 +3,7 @@
 > Backend for a subscription membership program with configurable plans, tiers, and benefits,
 > and tier changes driven by delivered-order activity and cohort.
 
-- **Stack:** Java 17 · Spring Boot 4.1 · Spring Data JPA · PostgreSQL 16 · Flyway · Spring Security (HTTP Basic)
+- **Stack:** Java 17 · Spring Boot 4.1 · Spring Data JPA · PostgreSQL 16 · Flyway
 - **Entry point:** `org.demo.com.subscriptionsapp.SubscriptionsAppApplication`
 - **API:** `http://localhost:8080/api/v1` · **Postgres:** `localhost:5432` / `subscription_db`
 
@@ -224,7 +224,7 @@ There is no cart or item catalogue. The list tells the caller which perks the me
 
 ## 6. API surface
 
-Base path `/api/v1`. Authentication is HTTP Basic. Invalid bodies and refused business rules return **400**. Unknown ids return **404** (`NotFoundException`, message `Entity not found: {id}`). Creates return **201**. Benefit delete returns **204**.
+Base path `/api/v1`. Invalid bodies and refused business rules return **400**. Unknown ids return **404** (`NotFoundException`, message `Entity not found: {id}`). Creates return **201**. Benefit delete returns **204**.
 
 List calls return a Spring page (`content`, `totalElements`, `totalPages`, `number`, `size`). `page` starts at 0. Omitted or zero `size` means 20. Rows are ordered by `id`.
 
@@ -277,8 +277,7 @@ List calls return a Spring page (`content`, `totalElements`, `totalPages`, `numb
 - **Schema:** Flyway `V1`–`V10` create tables. `V11`–`V14` seed five users, twelve subscriptions, thirteen orders, and six memberships.
 - **Containers:** `docker compose up --build`. App on port 8080, Postgres on 5432. No volume: data disappears with the container.
 - **Limits:** each container 0.5 CPU and 512 MB. Tomcat threads 5–20. Hikari pool size 5. JVM `-Xms256m -Xmx256m -Xss512k`.
-- **Auth:** HTTP Basic, user `user`, password printed at startup. CSRF is off.
-- **Exercise the API:** `./demo.sh THE_GENERATED_PASSWORD` against a fresh stack.
+- **Exercise the API:** `./demo.sh` against a fresh stack.
 
 ---
 

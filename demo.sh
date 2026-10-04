@@ -2,13 +2,6 @@
 set -u
 
 BASE_URL="${BASE_URL:-http://localhost:8080}"
-USERNAME="${USERNAME:-user}"
-PASSWORD="${1:-${PASSWORD:-}}"
-
-if [ -z "$PASSWORD" ]; then
-  echo "Usage: ./demo.sh THE_GENERATED_PASSWORD" >&2
-  exit 1
-fi
 
 OUT_FILE="${TMPDIR:-/tmp}/subscriptions-demo-body.json"
 PASSED=0
@@ -26,7 +19,7 @@ invoke_api() {
   expected="$5"
 
   if [ -n "$body" ]; then
-    status=$(curl -sS -u "$USERNAME:$PASSWORD" \
+    status=$(curl -sS \
       -H "Accept: application/json" \
       -H "Content-Type: application/json" \
       -o "$OUT_FILE" \
@@ -35,7 +28,7 @@ invoke_api() {
       --data-binary "$body" \
       "$BASE_URL$path")
   else
-    status=$(curl -sS -u "$USERNAME:$PASSWORD" \
+    status=$(curl -sS \
       -H "Accept: application/json" \
       -o "$OUT_FILE" \
       -w "%{http_code}" \
